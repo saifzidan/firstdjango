@@ -1,0 +1,26 @@
+<VirtualHost *:80>
+    #My site Name
+    ServerName <my-site-name>.com
+
+    #Demon process for multiple virtual hosts
+    WSGIDaemonProcess <my-site-name> threads=5
+
+    #Pointing wsgi script to config file
+    WSGIScriptAlias / /<my-site-dir>/django.wsgi
+    WSGIProcessGroup <my-site-name>
+
+    #Your static files location
+    Alias /static/ "/<my-site-dir>/static/"
+    <Location "/media">
+        SetHandler None
+    </Location>
+    <LocationMatch "\.(jpg|gif|png|js|css)$">
+        SetHandler None
+    </LocationMatch>
+    <Directory /<my-site-dir> >
+        WSGIProcessGroup <my-site-name>
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+</VirtualHost>
